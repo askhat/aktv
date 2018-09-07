@@ -11,7 +11,8 @@
     :items="items",
     :editable="auth",
     @update-tile="push",
-    @remove-tile="remove")
+    @remove-tile="remove",
+    @image-tile="push")
   .placeholder(v-show="!items")
     p.text-md-center Void
 </template>
@@ -38,8 +39,8 @@ export default {
     /**
      * Push new tile to remote collection
      */
-    push ({ _rev, _id = uuid(), x = 0, y = 0, h = 3, w = 4, color, title = 'Title', text = 'Text' } = {}) {
-      this.$store.dispatch('tiles/push', { _rev, _id, x, y, h, w, color, title, text })
+    push ({ _rev, _id = uuid(), x = 0, y = 0, h = 3, w = 4, color, title = 'Title', text = 'Text', image } = {}) {
+      this.$store.dispatch('tiles/push', { _rev, _id, x, y, h, w, color, title, text, image })
     },
     remove (id) {
       this.$store.dispatch('tiles/remove', id)

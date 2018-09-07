@@ -10,6 +10,7 @@ import {
   VDivider,
   VMenu,
   VList,
+  VImg,
   transitions
 } from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
@@ -25,6 +26,7 @@ Vue.use(Vuetify, {
     VDivider,
     VMenu,
     VList,
+    VImg,
     transitions
   }
 })

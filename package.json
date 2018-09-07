@@ -9,6 +9,7 @@
     "deploy": "ASSET_PATH=/aktv/ npm run build && push-dir --dir=dist --branch=gh-pages --cleanup"
   },
   "dependencies": {
+    "blob-util": "^2.0.2",
     "lodash": "^4.17.10",
     "pouchdb-browser": "^7.0.0",
     "push-dir": "^0.4.1",

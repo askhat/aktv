@@ -23,9 +23,11 @@ v-grid-layout(
       :title="tile.title",
       :text="tile.text",
       :color="tile.color",
+      :image="tile.image",
       @color-tile="changeColor",
       @edit-tile="edit",
-      @remove-tile="remove")
+      @remove-tile="remove",
+      @image-tile="addImage")
 </template>
 
 <script>
@@ -100,6 +102,10 @@ export default {
     changeColor (color, id) {
       const tile = this.items.find(tile => tile._id === id)
       this.$emit('update-tile', { ...tile, color })
+    },
+    addImage (image, id) {
+      const tile = this.items.find(tile => tile._id === id)
+      this.$emit('image-tile', { ...tile, image })
     }
   }
 }

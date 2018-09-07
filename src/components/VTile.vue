@@ -1,5 +1,6 @@
 <template lang="pug">
-v-card.cover(:color="color", :style="computedStyle")
+v-card(:color="color", :style="computedStyle")
+  img(v-show="src", :src="src")
   v-card-title
     input.title(
       v-if="editable",
@@ -20,11 +21,11 @@ v-card.cover(:color="color", :style="computedStyle")
     :id="id",
     :color="color",
     @color-tile="changeColor",
-    @remove-tile="removeTile")
+    @remove-tile="removeTile",
+    @tile-image="addImage")
 </template>
 
 <script>
-import _ from 'lodash'
 import ColorHelpers from '@/mixins/ColorHelpers'
 import VTileActions from '@/components/VTileActions'
 
@@ -36,7 +37,14 @@ export default {
     id: { type: String, required: true },
     title: { type: String,  default: '' },
     text: { type: String, default: '' },
-    color: { type: String, default: '#E6E6E6' }
+    color: { type: String, default: '#E6E6E6' },
+    image: { type: Blob, default: null }
+  },
+  data () {
+    return {
+      ready: false,
+      src: ''
+    }
   },
   computed: {
     computedStyle () {
@@ -44,15 +52,32 @@ export default {
       return { color }
     }
   },
+  watch: {
+    image (blob) {
+      this.createSrc(blob)
+    }
+  },
+  mounted () {
+    this.ready = true
+    this.createSrc()
+  },
   methods: {
+    createSrc (image = this.image) {
+      if (this.ready) {
+        this.src = URL.createObjectURL(image)
+      }
+    },
     removeTile () {
       this.$emit('remove-tile', this.id)
     },
     changeColor (color) {
-      _.throttle(() => this.$emit('color-tile', color, this.id), 150)
+      this.$emit('color-tile', color, this.id)
     },
     edit ({ target: { value } }, id, prop) {
       this.$emit('edit-tile', { id, [prop]: value })
+    },
+    addImage (payload) {
+      this.$emit('image-tile', payload, this.id)
     }
   }
 }
@@ -70,6 +95,9 @@ export default {
 }
 .fill {
   flex: 1;
+}
+img {
+  max-width: 100%;
 }
 textarea {
   height: 100%;

@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import PouchDB from 'pouchdb-browser'
 
 const db = new PouchDB('tile')
@@ -48,16 +49,16 @@ export default {
     /**
      * Create document in the remote collection
      */
-    push: async (_, payload) => {
+    push: _.throttle(async (ctx, payload) => {
       try {
         await db.put(payload)
       } catch (e) {
         throw e
       }
-    },
-    remove: async (_, payload) => {
+    }, 500),
+    remove: async (ctx, payload) => {
       try {
-        await db.remove(await db.get(payload))
+        db.remove(await db.get(payload))
       } catch (e) {
         throw e
       }
