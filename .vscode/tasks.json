@@ -6,11 +6,23 @@
     {
       "type": "npm",
       "script": "serve",
-      "problemMatcher": []
+      "problemMatcher": ["$eslint-stylish"]
     },
     {
       "type": "npm",
       "script": "deploy",
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "command": "couchdb",
+      "label": "start couchdb",
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "command": "pouchdb-server -d /usr/local/var/lib/pouchdb -c ~/.pouchdb.json",
+      "label": "start pouchdb",
       "problemMatcher": []
     }
   ]

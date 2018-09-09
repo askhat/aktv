@@ -11,6 +11,7 @@ import {
   VMenu,
   VList,
   VImg,
+  VTextarea,
   transitions
 } from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
@@ -27,6 +28,7 @@ Vue.use(Vuetify, {
     VMenu,
     VList,
     VImg,
+    VTextarea,
     transitions
   }
 })
