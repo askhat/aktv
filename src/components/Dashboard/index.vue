@@ -54,6 +54,7 @@
 <script>
 import _ from 'lodash'
 import { mapState } from 'vuex'
+import VLogin from '@/components/VLogin'
 import DGrid from '@/components/Dashboard/DGrid'
 import DGridActions from '@/components/Dashboard/DGridActions'
 import DCard from '@/components/Dashboard/DCard'
@@ -62,10 +63,14 @@ import DCardActions from '@/components/Dashboard/DCardActions'
 export default {
   name: 'Dashboard',
   components: {
+    VLogin,
     DGrid,
     DGridActions,
     DCard,
     DCardActions
+  },
+  props: {
+    showLoginForm: { type: Boolean, default: false }
   },
   computed: {
     ...mapState('dashboard', ['cards']),
@@ -89,6 +94,13 @@ export default {
     removeImage (id) {
       const card = this.cards.find(card => card._id === id)
       this.$store.dispatch('dashboard/push', { ..._.omit(card, ['image']) })
+    },
+    proceedLogin (creds) {
+      this.$store.dispatch('ui/authenticate', creds)
+      this.$router.push('/')
+    },
+    cancelLogin () {
+      this.$router.push('/')
     }
   }
 }

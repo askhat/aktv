@@ -44,11 +44,11 @@ export default {
           const {
             moved,
             resized,
-            editable: isDragable,
-            editable: isResizeable
+            editable: isDraggable,
+            editable: isResizable
           } = this
           return createElement(GridItem, {
-            props: { i, x, y, h, w, isDragable, isResizeable },
+            props: { i, x, y, h, w, isDraggable, isResizable },
             on: { moved, resized }
           }, [el])
         }
