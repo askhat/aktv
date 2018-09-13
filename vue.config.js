@@ -1,5 +1,6 @@
 const { resolve } = require('path')
 const { EnvironmentPlugin } = require('webpack')
+const { ProvidePlugin } = require('webpack')
 const { BaseHrefWebpackPlugin } = require('base-href-webpack-plugin')
 
 module.exports = {
@@ -15,8 +16,16 @@ module.exports = {
       alias: { '@': resolve(__dirname, 'src') }
     },
     plugins: [
-      new BaseHrefWebpackPlugin({ baseHref: process.env['ASSET_PATH']}),
-      new EnvironmentPlugin({ 'DATABASE_URL': 'http://localhost:5984' })
+      new BaseHrefWebpackPlugin({
+        baseHref: process.env['ASSET_PATH']
+      }),
+      new EnvironmentPlugin({
+        'DATABASE_URL': 'http://localhost:5984'
+      }),
+      new ProvidePlugin({
+        'window.Quill': 'quill',
+        // 'Quill': 'quill'
+      })
     ]
   }
 }

@@ -4,6 +4,12 @@
     :active="showLoginForm",
     @proceed="proceedLogin",
     @cancel="cancelLogin")
+  d-editor(
+    :active="!!editingCard",
+    :id="editingCard",
+    :content="getContent(editingCard)",
+    @update-content="push",
+    @close-editor="editingCard = null")
   d-grid(
     :items="cards",
     :editable="auth",
@@ -13,32 +19,14 @@
       v-for="card in cards",
       :key="card._id",
       :id="card._id",
-      :title="card.title",
-      :text="card.text",
       :color="card.color",
-      :embed="card.embed",
-      :image="card.image",
-      :image-position="card.imagePosition",
+      :content="card.content",
       :editable="auth",
-      @update-card-title="push",
-      @update-card-text="push")
-      d-card-actions(
-        v-if="auth",
-        slot="actions",
-        :id="card._id",
-        :current-color="card.color",
-        @update-card-color="push",
-        @update-card-embed="push",
-        @remove-card-embed="removeEmbed",
-        @update-card-image="push",
-        @update-card-image-position="push",
-        @remove-card-image="removeImage",
-        @remove-card="remove")
-    d-grid-actions(
+      @edit-card="openEditor(card._id)")
+    d-grid-button(
       v-if="auth",
       slot="actions",
-      :id="card._id",
-      :current-color="card.color",
+      current-color="#e6e6e6",
       @update-card-color="push",
       @update-card-embed="push",
       @remove-card-embed="removeEmbed",
@@ -46,9 +34,6 @@
       @update-card-image-position="push",
       @remove-card-image="removeImage",
       @remove-card="remove")
-  d-grid-actions(
-    slot="actions",
-    @add-card="create")
 </template>
 
 <script>
@@ -56,27 +41,39 @@ import _ from 'lodash'
 import { mapState } from 'vuex'
 import VLogin from '@/components/VLogin'
 import DGrid from '@/components/Dashboard/DGrid'
-import DGridActions from '@/components/Dashboard/DGridActions'
+import DGridButton from '@/components/Dashboard/DGridButton'
 import DCard from '@/components/Dashboard/DCard'
-import DCardActions from '@/components/Dashboard/DCardActions'
+import DEditor from '@/components/Dashboard/DEditor'
 
 export default {
   name: 'Dashboard',
   components: {
     VLogin,
     DGrid,
-    DGridActions,
+    DGridButton,
     DCard,
-    DCardActions
+    DEditor
   },
   props: {
     showLoginForm: { type: Boolean, default: false }
+  },
+  data () {
+    return {
+      editingCard: null
+    }
   },
   computed: {
     ...mapState('dashboard', ['cards']),
     ...mapState('ui', ['auth'])
   },
   methods: {
+    getContent (id) {
+      const card = this.cards.find(card => card._id === id)
+      return card && card.content
+    },
+    openEditor (id) {
+      this.editingCard = id
+    },
     push ({ id, ...update }) {
       const card = this.cards.find(card => card._id === id)
       this.$store.dispatch('dashboard/push', { ...card, ...update })

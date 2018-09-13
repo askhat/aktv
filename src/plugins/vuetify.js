@@ -12,6 +12,7 @@ import {
   VList,
   VImg,
   VTextarea,
+  VSpeedDial,
   transitions
 } from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
@@ -29,6 +30,7 @@ Vue.use(Vuetify, {
     VList,
     VImg,
     VTextarea,
+    VSpeedDial,
     transitions
   }
 })

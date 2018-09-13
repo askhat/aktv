@@ -1,81 +1,80 @@
 <template lang="pug">
-v-card.full(:color="color", :style="textColor")
-  div.embed(v-if="embed", v-html="embed")
-  div.full.card(v-else)
-    v-img.fill(
-      v-if="image && imagePosition === 'top'",
-      :src="image",
-      style="flex: 10")
-    v-card-title
-      input.title(
-        v-if="editable",
-        :value="title",
-        placeholder="Title",
-        @change="edit($event, 'title')")
-      h3.title(v-else) {{ title }}
-    v-card-text(style="flex: 1")
-      textarea.subtitle(
-        v-if="editable",
-        :value="text",
-        placeholder="Text",
-        @change="edit($event, 'text')")
-      p(v-else).subtitle {{ text }}
-    v-img.fill(
-      v-if="image && imagePosition === 'bottom'",
-      :src="image",
-      style="flex: 10")
-  slot(name="actions")
+v-card.card(:color="color", :style="{ color: contentColor }")
+  v-card-text(v-html="content")
+  v-speed-dial(v-if="editable", open-on-hover, direction="top")
+    v-btn(
+      slot="activator"
+      action,
+      icon,
+      fixed,
+      bottom,
+      right,
+      :color="contentColor",
+      @click="edit")
+      v-icon(:color="color") create
+    v-btn(action, icon)
+      v-icon(:color="color") user
 </template>
 
 <script>
+import { Slider as VColorPicker } from 'vue-color'
 import ColorHelpers from '@/mixins/ColorHelpers'
+import DActionButton from '@/components/Dashboard/DActionButton'
 
 export default {
+  components: {
+    VColorPicker,
+    DActionButton
+  },
   mixins: [ ColorHelpers ],
   props: {
     editable: { type: Boolean, default: false },
     id: { type: [String, Number], required: true },
-    title: { type: String, default: '' },
-    text: { type: String, default: '' },
     color: { type: String, default: '' },
-    embed: { type: String, default: '' },
-    image: { type: String, default: null },
-    imagePosition: { type: String, default: 'top' }
+    content: { type: String, default: '' }
+  },
+  data () {
+    return {
+      isEditing: false,
+      showColorPicker: false
+    }
   },
   computed: {
-    textColor () {
-      const color = this.isLight(this.color) ? 'black' : 'white'
-      return { color }
+    contentColor () {
+      return this.isLight(this.color) ? '#191919' : '#FFFFFF'
     }
   },
   methods: {
-    edit ({ target: { value } }, prop) {
+    edit () {
+      this.$emit('edit-card', this.id)
+    },
+    colorize ({ hex: color }) {
       const { id } = this
-      this.$emit(`update-card-${prop}`, { id, [prop]: value })
+      this.$emit('update-card', { id, color })
     }
   }
 }
 </script>
 
+<style>
+.ql-toolbar.ql-snow + .ql-container.ql-snow {
+  border: unset;
+}
+.ql-toolbar.ql-snow {
+  border: unset;
+}
+.ql-toolbar {
+  background: lightgray;
+}
+</style>
 <style scoped>
-.full {
-  width: 100%;
-  height: 100%;
-}
 .card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.embed {
-  padding: 16px;
-}
-textarea {
-  height: 100%;
   width: 100%;
-  resize: none;
+  height: 100%;
 }
-input:focus, textarea:focus {
-  outline: unset;
+.color-picker {
+  max-width: 180px;
+  padding-top: 16px;
+  padding-bottom: 16px;
 }
 </style>

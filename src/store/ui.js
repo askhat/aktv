@@ -1,7 +1,7 @@
 export default {
   namespaced: true,
   state: {
-    auth: false
+    auth: true
   },
   mutations: {
     auth: (state, payload) => (state.auth = payload)
