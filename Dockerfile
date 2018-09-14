@@ -2,12 +2,13 @@ FROM node:alpine as builder
 
 WORKDIR /tmp
 ADD . ./
-RUN npm install --silent
+RUN ["npm", "install", "--silent"]
+RUN ["npm", "run", "build"]
 
-FROM abiosoft/caddy
-WORKDIR /app
+FROM nginx:alpine as server
+WORKDIR /usr/share/nginx/html
 
-COPY --from=builder /tmp .
-EXPOSE 2015
+COPY --from=builder /tmp/dist .
+EXPOSE 80 443
 
-CMD caddy
+CMD ["nginx", "-g", "daemon off;"]
